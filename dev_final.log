@@ -1,0 +1,15 @@
+
+> app@0.0.1 dev
+> astro dev --port 4323
+
+14:35:18 [types] Generated 1ms
+14:35:18 [content] Syncing content
+14:35:18 [content] Synced content
+
+ astro  v5.16.11 ready in 371 ms
+
+┃ Local    http://localhost:4323/
+┃ Network  use --host to expose
+
+14:35:18 watching for file changes...
+14:35:38 [200] / 85ms

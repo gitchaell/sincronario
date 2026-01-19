@@ -3,8 +3,9 @@ import { getDreamspellDate } from '../lib/dreamspell';
 import '../styles/global.css';
 import MayanTone from '../components/MayanTone.astro';
 import Analytics from '@vercel/analytics/astro';
-const today = new Date()
-const dreamspell = getDreamspellDate(today)
+
+const today = new Date();
+const dreamspell = getDreamspellDate(today);
 
 const colorClasses = {
   Red: "text-red-700 border-red-500 bg-red-50",
@@ -14,48 +15,50 @@ const colorClasses = {
   Green: "text-green-700 border-green-500 bg-green-50"
 };
 
-const borderColor =
-	colorClasses[dreamspell.color as keyof typeof colorClasses] || 'text-gray-800'
+const borderColor = colorClasses[dreamspell.color as keyof typeof colorClasses] || "text-gray-800";
 
 // Descriptions
 const sealDescriptions: Record<string, string> = {
-	Dragón: 'Nutre el nacimiento, el ser y la existencia.',
-	Viento: 'Comunica el espíritu y el aliento.',
-	Noche: 'Sueña la abundancia y la intuición.',
-	Semilla: 'Atina el florecimiento y la consciencia.',
-	Serpiente: 'Sobrevive la fuerza vital y el instinto.',
-	'Enlazador de Mundos': 'Iguala la muerte y la oportunidad.',
-	Mano: 'Conoce la realización y la curación.',
-	Estrella: 'Embellece el arte y la elegancia.',
-	Luna: 'Purifica el agua universal y el flujo.',
-	Perro: 'Ama el corazón y la lealtad.',
-	Mono: 'Juega la magia y la ilusión.',
-	Humano: 'Influencia la libre voluntad y la sabiduría.',
-	'Caminante del Cielo': 'Explora el espacio y la vigilancia.',
-	Mago: 'Encanta la atemporalidad y la receptividad.',
-	Águila: 'Crea la visión y la mente.',
-	Guerrero: 'Cuestiona la inteligencia y la intrepidez.',
-	Tierra: 'Evoluciona la navegación y la sincronía.',
-	Espejo: 'Refleja el sinfín y el orden.',
-	Tormenta: 'Cataliza la energía y la autogeneración.',
-	Sol: 'Ilumina el fuego universal y la vida.'
-}
+  "Dragón": "Nutre el nacimiento, el ser y la existencia.",
+  "Viento": "Comunica el espíritu y el aliento.",
+  "Noche": "Sueña la abundancia y la intuición.",
+  "Semilla": "Atina el florecimiento y la consciencia.",
+  "Serpiente": "Sobrevive la fuerza vital y el instinto.",
+  "Enlazador de Mundos": "Iguala la muerte y la oportunidad.",
+  "Mano": "Conoce la realización y la curación.",
+  "Estrella": "Embellece el arte y la elegancia.",
+  "Luna": "Purifica el agua universal y el flujo.",
+  "Perro": "Ama el corazón y la lealtad.",
+  "Mono": "Juega la magia y la ilusión.",
+  "Humano": "Influencia la libre voluntad y la sabiduría.",
+  "Caminante del Cielo": "Explora el espacio y la vigilancia.",
+  "Mago": "Encanta la atemporalidad y la receptividad.",
+  "Águila": "Crea la visión y la mente.",
+  "Guerrero": "Cuestiona la inteligencia y la intrepidez.",
+  "Tierra": "Evoluciona la navegación y la sincronía.",
+  "Espejo": "Refleja el sinfín y el orden.",
+  "Tormenta": "Cataliza la energía y la autogeneración.",
+  "Sol": "Ilumina el fuego universal y la vida."
+};
 
 const toneDescriptions: Record<string, string> = {
-	Magnético: 'Unifica el propósito. ¿Cuál es mi meta?',
-	Lunar: 'Polariza el desafío. ¿Cuáles son los obstáculos?',
-	Eléctrico: 'Activa el servicio. ¿Cómo puedo servir mejor?',
-	'Auto-existente': 'Define la forma. ¿Cuál es la forma de la acción?',
-	Entonado: 'Confiere poder. ¿Cómo tomo el mando?',
-	Rítmico: 'Organiza la igualdad. ¿Cómo organizo mis recursos?',
-	Resonante: 'Canaliza la sintonización. ¿Cómo me sintonizo?',
-	Galáctico: 'Armoniza la integridad. ¿Vivo lo que creo?',
-	Solar: 'Pulsa la intención. ¿Cómo logro mi propósito?',
-	Planetario: 'Perfecciona la manifestación. ¿Cómo perfecciono lo que hago?',
-	Espectral: 'Divulga la liberación. ¿Cómo libero y suelto?',
-	Cristal: 'Dedica la cooperación. ¿Cómo me dedico a todo lo que vive?',
-	Cósmico: 'Perdura la presencia. ¿Cómo trasciendo?'
-}
+  "Magnético": "Unifica el propósito. ¿Cuál es mi meta?",
+  "Lunar": "Polariza el desafío. ¿Cuáles son los obstáculos?",
+  "Eléctrico": "Activa el servicio. ¿Cómo puedo servir mejor?",
+  "Auto-existente": "Define la forma. ¿Cuál es la forma de la acción?",
+  "Entonado": "Confiere poder. ¿Cómo tomo el mando?",
+  "Rítmico": "Organiza la igualdad. ¿Cómo organizo mis recursos?",
+  "Resonante": "Canaliza la sintonización. ¿Cómo me sintonizo?",
+  "Galáctico": "Armoniza la integridad. ¿Vivo lo que creo?",
+  "Solar": "Pulsa la intención. ¿Cómo logro mi propósito?",
+  "Planetario": "Perfecciona la manifestación. ¿Cómo perfecciono lo que hago?",
+  "Espectral": "Divulga la liberación. ¿Cómo libero y suelto?",
+  "Cristal": "Dedica la cooperación. ¿Cómo me dedico a todo lo que vive?",
+  "Cósmico": "Perdura la presencia. ¿Cómo trasciendo?"
+};
+
+const sealDesc = sealDescriptions[dreamspell.seal] || "";
+const toneDesc = toneDescriptions[dreamspell.tone] || "";
 
 // Construct proper affirmation
 function buildAffirmation() {
