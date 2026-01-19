@@ -1,0 +1,32 @@
+---
+const { value } = Astro.props;
+
+interface Props {
+  value: number; // 1-13
+  className?: string;
+}
+
+const isBar = (v: number) => v >= 5;
+const numBars = Math.floor(value / 5);
+const numDots = value % 5;
+---
+
+<div class={`flex flex-col items-center gap-1 ${Astro.props.className || ''}`} title={`Tono ${value}`}>
+    <!-- Dots Row -->
+    {numDots > 0 && (
+        <div class="flex gap-2 mb-1">
+            {Array.from({ length: numDots }).map(() => (
+                <div class="w-4 h-4 rounded-full bg-current"></div>
+            ))}
+        </div>
+    )}
+
+    <!-- Bars Stack -->
+    {numBars > 0 && (
+        <div class="flex flex-col gap-1">
+             {Array.from({ length: numBars }).map(() => (
+                <div class="w-20 h-2 bg-current rounded-full"></div>
+            ))}
+        </div>
+    )}
+</div>
