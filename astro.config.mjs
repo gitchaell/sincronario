@@ -6,7 +6,9 @@ import vercel from '@astrojs/vercel'
 export default defineConfig({
 	output: 'server',
 	adapter: vercel({
-		// Analytics enabled via component in src/pages/index.astro
+		webAnalytics: {
+			enabled: true
+		}
 	}),
 	vite: {
 		plugins: [tailwindcss()]

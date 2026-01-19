@@ -1,25 +1,24 @@
 ---
-import { getDreamspellDate } from '../lib/dreamspell'
-import '../styles/global.css'
+import { getDreamspellDate } from '../lib/dreamspell';
+import '../styles/global.css';
+import MayanTone from '../components/MayanTone.astro';
+import Analytics from '@vercel/analytics/astro';
 
 const today = new Date()
 const dreamspell = getDreamspellDate(today)
 
-const sealImage = `/seals/${dreamspell.sealIndex}.png` // Placeholder for images if I had them
-const toneImage = `/tones/${dreamspell.toneIndex}.png`
-
 const colorClasses = {
-	Red: 'text-red-600 border-red-600 bg-red-50',
-	White: 'text-gray-600 border-gray-600 bg-gray-50',
-	Blue: 'text-blue-600 border-blue-600 bg-blue-50',
-	Yellow: 'text-yellow-600 border-yellow-600 bg-yellow-50',
-	Green: 'text-green-600 border-green-600 bg-green-50'
-}
+  Red: "text-red-700 border-red-500 bg-red-50",
+  White: "text-stone-600 border-stone-400 bg-stone-50",
+  Blue: "text-blue-700 border-blue-500 bg-blue-50",
+  Yellow: "text-yellow-600 border-yellow-500 bg-yellow-50",
+  Green: "text-green-700 border-green-500 bg-green-50"
+};
 
 const borderColor =
 	colorClasses[dreamspell.color as keyof typeof colorClasses] || 'text-gray-800'
 
-// Descriptions (mock data for now, could be expanded)
+// Descriptions
 const sealDescriptions: Record<string, string> = {
 	Dragón: 'Nutre el nacimiento, el ser y la existencia.',
 	Viento: 'Comunica el espíritu y el aliento.',
@@ -59,152 +58,175 @@ const toneDescriptions: Record<string, string> = {
 	Cósmico: 'Perdura la presencia. ¿Cómo trasciendo?'
 }
 
-const sealDesc = sealDescriptions[dreamspell.seal] || ''
-const toneDesc = toneDescriptions[dreamspell.tone] || ''
+// Construct proper affirmation
+function buildAffirmation() {
+    // "Yo polarizo con el fin de nutrir" vs "Yo polariza..."
+    // This is hard to conjugate automatically in Spanish without a dictionary.
+    // We will stick to the simplified construction but formatted nicely.
+    const actionTone = toneDesc.split('.')[0]; // "Unifica el propósito"
+    const actionSeal = sealDesc.split('.')[0]; // "Nutre el nacimiento..."
+
+    // Attempt: Yo [Tone Action Verb] con el fin de [Seal Action Verb (Infinitive?)]
+    // This is tricky. Let's use the standard "I unify in order to nurture..." pattern translated.
+    // "Yo [verbo tono] para [verbo sello]"
+
+    // Let's use the raw descriptions as they are rich enough.
+    return `Yo ${actionTone.toLowerCase()} para ${actionSeal.toLowerCase()}.`;
+}
+
+const affirmation = buildAffirmation();
 ---
 
-<html lang='es'>
-	<head>
-		<meta charset='utf-8' />
-		<meta name='viewport' content='width=device-width' />
-		<title>Sincronario 13 Lunas</title>
-		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
-	</head>
-	<body
-		class='bg-stone-100 text-stone-800 font-sans min-h-screen flex flex-col items-center p-4'>
-		<main
-			class='max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden mt-8'>
-			<!-- Header / Gregorian Date -->
-			<header class='bg-stone-800 text-stone-200 p-6 text-center'>
-				<h1 class='text-sm uppercase tracking-widest mb-2 opacity-75'>
-					Calendario Gregoriano
-				</h1>
-				<p class='text-3xl font-light'>
-					{
-						today.toLocaleDateString('es-ES', {
-							weekday: 'long',
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric'
-						})
-					}
-				</p>
-			</header>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sincronario 13 Lunas</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="Sincronario de 13 Lunas. Descubre tu Kin y la energía del día." />
+    <meta name="theme-color" content="#ffffff" />
+</head>
+<body class="bg-stone-100 text-stone-800 font-sans min-h-screen flex flex-col items-center p-4 md:p-8">
 
-			<!-- Main Content -->
-			<div class='p-8'>
-				<div class='text-center mb-8'>
-					<h2 class='text-xl font-bold text-stone-600 mb-2'>
-						Fecha Sincronaria
-					</h2>
-					{
-						dreamspell.isDayOutOfTime ? (
-							<div class='text-2xl font-bold text-green-600'>
-								¡Día Fuera del Tiempo!
-							</div>
-						) : dreamspell.seal === 'Hunab Ku' ? (
-							<div class='text-2xl font-bold text-green-600'>
-								0.0 Hunab Ku (Día Bisiesto)
-							</div>
-						) : (
-							<div class='flex flex-col items-center justify-center space-y-2'>
-								<span class='text-lg'>
-									Luna <strong>{dreamspell.moon}</strong> (Mes{' '}
-									{dreamspell.moonIndex})
-								</span>
-								<span class='text-lg'>
-									Día <strong>{dreamspell.dayOfMoon}</strong> - Plasma{' '}
-									<strong>{dreamspell.plasma}</strong>
-								</span>
-							</div>
-						)
-					}
-				</div>
+    <Analytics />
 
-				<hr class='border-stone-200 my-6' />
+    <main class="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden mt-4 md:mt-8">
 
-				<!-- Kin Info -->
-				{
-					dreamspell.seal === 'Hunab Ku' ? (
-						<div class='text-center p-8 bg-green-50 rounded-lg border border-green-200'>
-							<p>
-								Hoy es un día para sintonizar con la fuente pura. Sin Kin, sin
-								tiempo.
-							</p>
-						</div>
-					) : (
-						<div
-							class={`border-4 rounded-lg p-6 text-center ${borderColor} bg-opacity-10`}>
-							<h3 class='text-sm uppercase tracking-widest mb-1 opacity-75'>
-								Kin {dreamspell.kin}
-							</h3>
-							<h2 class='text-4xl font-bold mb-4'>
-								{dreamspell.seal} {dreamspell.tone}
-							</h2>
+        <!-- Header / Gregorian Date -->
+        <header class="bg-stone-900 text-stone-100 p-6 text-center">
+            <h1 class="text-xs md:text-sm uppercase tracking-[0.2em] mb-2 opacity-75">Calendario Gregoriano</h1>
+            <p class="text-2xl md:text-4xl font-light capitalize">
+                {today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+        </header>
 
-							<div class='grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 text-left'>
-								<div>
-									<h4 class='font-bold text-lg mb-1'>
-										Sello: {dreamspell.seal}
-									</h4>
-									<p class='text-sm opacity-90'>{sealDesc}</p>
-								</div>
-								<div>
-									<h4 class='font-bold text-lg mb-1'>
-										Tono: {dreamspell.tone}
-									</h4>
-									<p class='text-sm opacity-90'>{toneDesc}</p>
-								</div>
-							</div>
-						</div>
-					)
-				}
+        <!-- Main Content -->
+        <div class="p-6 md:p-10">
 
-				<!-- Affirmation / Mantra (Basic Construction) -->
-				{
-					!dreamspell.isDayOutOfTime && dreamspell.seal !== 'Hunab Ku' && (
-						<div class='mt-8 text-center italic text-stone-600'>
-							<p>
-								"Yo {toneDesc.split(' ')[0].toLowerCase()} con el fin de{' '}
-								{sealDesc.split(' ')[0].toLowerCase()}..."
-							</p>
-							<p class='text-xs mt-2'>(Afirmación simplificada)</p>
-						</div>
-					)
-				}
-			</div>
+            <!-- Date Info -->
+            <div class="text-center mb-8 md:mb-12">
+                <h2 class="text-lg md:text-xl font-bold text-stone-500 uppercase tracking-wide mb-4">Energía del Día</h2>
 
-			<!-- Explanation Section -->
-			<div class='bg-stone-50 p-8 border-t border-stone-200'>
-				<h3 class='font-bold text-xl mb-4 text-stone-700'>¿Qué es esto?</h3>
-				<div class='prose text-stone-600 space-y-4'>
-					<p>
-						El <strong>Sincronario de 13 Lunas</strong> es un calendario alternativo
-						diseñado para sincronizarnos con los ciclos naturales. A diferencia del
-						calendario gregoriano (12 meses irregulares), este calendario consta de
-						<strong>13 lunas</strong> de <strong>28 días</strong> exactos (364 días)
-						más un "Día Fuera del Tiempo" (25 de julio).
-					</p>
-					<p>
-						Cada día tiene una energía especial llamada <strong>Kin</strong>,
-						compuesta por un <strong>Sello Solar</strong> (arquetipo de energía) y
-						un <strong>Tono Galáctico</strong> (acción).
-					</p>
-					<details>
-						<summary class='cursor-pointer font-semibold text-stone-700'
-							>Para entendidos</summary
-						>
-						<p class='mt-2'>
-							Hoy es el día {dreamspell.dayOfMoon} de la Luna {dreamspell.moon}.
-							El plasma radial es {dreamspell.plasma}. El Kin destino es el {
-								dreamspell.kin
-							}.
-						</p>
-					</details>
-				</div>
-			</div>
-		</main>
+                {dreamspell.isDayOutOfTime ? (
+                     <div class="p-4 bg-green-100 text-green-800 rounded-lg">
+                        <div class="text-2xl md:text-3xl font-bold mb-2">¡Día Fuera del Tiempo!</div>
+                        <p>Un día para el perdón, la celebración y el arte. "El Tiempo es Arte".</p>
+                    </div>
+                ) : dreamspell.seal === "Hunab Ku" ? (
+                     <div class="text-2xl font-bold text-green-600">0.0 Hunab Ku (Día Bisiesto)</div>
+                ) : (
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left sm:text-center max-w-lg mx-auto">
+                        <div class="bg-stone-50 p-4 rounded-lg">
+                            <span class="block text-xs uppercase text-stone-400 font-bold">Luna {dreamspell.moonIndex}</span>
+                            <span class="text-lg md:text-xl font-medium text-stone-700">{dreamspell.moon}</span>
+                            <p class="text-xs text-stone-500 mt-1 italic">"{dreamspell.moonQuestion}"</p>
+                             <p class="text-xs text-stone-400 mt-1">Totem: {dreamspell.moonTotem}</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-lg">
+                            <span class="block text-xs uppercase text-stone-400 font-bold">Día {dreamspell.dayOfMoon}</span>
+                            <span class="text-lg md:text-xl font-medium text-stone-700">Plasma {dreamspell.plasma}</span>
+                            <p class="text-xs text-stone-500 mt-1 italic">{dreamspell.plasmaAffirmation.split(': ')[1]}</p>
+                        </div>
+                    </div>
+                )}
+            </div>
 
-		<footer class='mt-8 text-stone-400 text-sm'>Hecho con Astro</footer>
-	</body>
+            <hr class="border-stone-100 my-8" />
+
+            <!-- Kin Info -->
+             {dreamspell.seal === "Hunab Ku" ? (
+                 <div class="text-center p-8 bg-green-50 rounded-lg border border-green-200">
+                    <p>Hoy es un día para sintonizar con la fuente pura. Sin Kin, sin tiempo.</p>
+                 </div>
+             ) : (
+                <div class={`relative border-4 rounded-xl p-6 md:p-10 text-center ${borderColor} bg-opacity-5 transition-all hover:shadow-md`}>
+
+                    <div class="absolute top-4 right-4 opacity-20">
+                         <!-- Maybe a subtle background icon here later -->
+                    </div>
+
+                    <h3 class="text-sm uppercase tracking-widest mb-4 opacity-75 font-semibold">Kin {dreamspell.kin}</h3>
+
+                    <div class="flex flex-col items-center justify-center mb-6">
+                        <div class="mb-4 text-current opacity-80 scale-125">
+                            <MayanTone value={dreamspell.toneIndex} />
+                        </div>
+                        <h2 class="text-3xl md:text-5xl font-bold mb-2 leading-tight">
+                            {dreamspell.seal} {dreamspell.tone}
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 text-left">
+                        <div class="bg-white bg-opacity-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-current opacity-50"></span>
+                                Sello Solar
+                            </h4>
+                            <p class="text-sm md:text-base opacity-90 leading-relaxed">{sealDesc}</p>
+                        </div>
+                        <div class="bg-white bg-opacity-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-current opacity-50"></span>
+                                Tono Galáctico
+                            </h4>
+                            <p class="text-sm md:text-base opacity-90 leading-relaxed">{toneDesc}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-8 border-t border-current border-opacity-20 text-center">
+                        <p class="font-serif italic text-lg md:text-xl opacity-90">
+                            "{affirmation}"
+                        </p>
+                    </div>
+
+                </div>
+            )}
+
+        </div>
+
+        <!-- Explanation Section -->
+        <div class="bg-stone-50 p-6 md:p-10 border-t border-stone-200">
+            <h3 class="font-bold text-xl mb-4 text-stone-700">¿Qué hace especial este día?</h3>
+            <div class="prose prose-stone text-stone-600 space-y-4 text-sm md:text-base max-w-none">
+                 {!dreamspell.isDayOutOfTime && dreamspell.seal !== "Hunab Ku" && (
+                    <p>
+                        La energía del <strong>{dreamspell.seal}</strong> nos invita a <em>{sealDesc.split('.')[0].toLowerCase()}</em>,
+                        mientras que el tono <strong>{dreamspell.tone}</strong> nos pregunta: <em>"{dreamspell.moonQuestion}"</em>
+                        (o más específicamente: <em>{toneDesc.split('?')[1] || toneDesc}</em>).
+                    </p>
+                 )}
+                <p>
+                    El <strong>Plasma {dreamspell.plasma}</strong> activa un centro de energía específico en el cuerpo.
+                    Hoy estamos en la <strong>Luna {dreamspell.moon}</strong>, que trabaja con el poder del animal <strong>{dreamspell.moonTotem}</strong>.
+                </p>
+
+                <div class="mt-6 pt-6 border-t border-stone-200">
+                     <details class="group">
+                        <summary class="cursor-pointer font-semibold text-stone-700 list-none flex items-center gap-2">
+                            <span class="transition-transform group-open:rotate-90">▶</span>
+                            <span>Detalles Técnicos (Para entendidos)</span>
+                        </summary>
+                        <div class="mt-4 pl-6 border-l-2 border-stone-300">
+                            <ul class="list-disc pl-4 space-y-1">
+                                <li><strong>Fecha Gregoriana:</strong> {today.toISOString().split('T')[0]}</li>
+                                <li><strong>Kin Destino:</strong> {dreamspell.kin}</li>
+                                <li><strong>Luna:</strong> {dreamspell.moonIndex} ({dreamspell.moon})</li>
+                                <li><strong>Día de la Luna:</strong> {dreamspell.dayOfMoon} / 28</li>
+                                <li><strong>Plasma Radial:</strong> {dreamspell.plasma}</li>
+                                <li><strong>Castillo, Onda Encantada:</strong> (Cálculo pendiente)</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-12 mb-8 text-stone-400 text-sm text-center">
+        <p>Sincronario de 13 Lunas</p>
+        <p class="text-xs mt-2 opacity-50">Hecho con Astro y la Ley del Tiempo</p>
+    </footer>
+
+</body>
 </html>
