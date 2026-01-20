@@ -1,19 +1,17 @@
 ---
 import { getDreamspellDate } from '../lib/dreamspell'
 import '../styles/global.css'
-
+import MayanTone from '../components/MayanTone.astro'
+import Analytics from '@vercel/analytics/astro'
 const today = new Date()
 const dreamspell = getDreamspellDate(today)
 
-const sealImage = `/seals/${dreamspell.sealIndex}.png` // Placeholder for images if I had them
-const toneImage = `/tones/${dreamspell.toneIndex}.png`
-
 const colorClasses = {
-	Red: 'text-red-600 border-red-600 bg-red-50',
-	White: 'text-gray-600 border-gray-600 bg-gray-50',
-	Blue: 'text-blue-600 border-blue-600 bg-blue-50',
-	Yellow: 'text-yellow-600 border-yellow-600 bg-yellow-50',
-	Green: 'text-green-600 border-green-600 bg-green-50'
+	Red: 'text-red-700 border-red-500 bg-red-50',
+	White: 'text-stone-600 border-stone-400 bg-stone-50',
+	Blue: 'text-blue-700 border-blue-500 bg-blue-50',
+	Yellow: 'text-yellow-600 border-yellow-500 bg-yellow-50',
+	Green: 'text-green-700 border-green-500 bg-green-50'
 }
 
 const borderColor =
@@ -207,4 +205,5 @@ const toneDesc = toneDescriptions[dreamspell.tone] || ''
 
 		<footer class='mt-8 text-stone-400 text-sm'>Hecho con Astro</footer>
 	</body>
+	<Analytics />
 </html>
